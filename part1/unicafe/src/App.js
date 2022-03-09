@@ -5,9 +5,10 @@ const Button = ({ handleClick, text }) => (
 );
 
 const StatisticLine = ({ text, value }) => (
-	<p>
-		{text} {value}
-	</p>
+	<tr>
+		<td>{text}</td>
+		<td>{value}</td>
+	</tr>
 );
 
 const Statistics = (props) => {
@@ -18,14 +19,16 @@ const Statistics = (props) => {
 	}
 
 	return (
-		<div>
-			<StatisticLine text="good" value={good} />
-			<StatisticLine text="neutral" value={neutral} />
-			<StatisticLine text="bad" value={bad} />
-			<StatisticLine text="all" value={total} />
-			<StatisticLine text="average" value={average} />
-			<StatisticLine text="positive" value={`${positiveRate} %`} />
-		</div>
+		<table>
+			<tbody>
+				<StatisticLine text="good" value={good} />
+				<StatisticLine text="neutral" value={neutral} />
+				<StatisticLine text="bad" value={bad} />
+				<StatisticLine text="all" value={total} />
+				<StatisticLine text="average" value={average} />
+				<StatisticLine text="positive" value={`${positiveRate} %`} />
+			</tbody>
+		</table>
 	);
 };
 
@@ -41,7 +44,7 @@ const App = () => {
 
 	return (
 		<div>
-			<h1>give feedback</h1>
+			<h2>give feedback</h2>
 			<div>
 				<Button handleClick={() => setGood(good + 1)} text={"good"} />
 				<Button handleClick={() => setNeutral(neutral + 1)} text={"neutral"} />
