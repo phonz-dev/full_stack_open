@@ -18,11 +18,36 @@ const App = () => {
 			})
 	}, [])
 
+	const isPersonAdded = () => {
+		return persons.some(({ name }) => name === newName)
+	}
+
+	const resetInput = () => {
+		setNewName("");
+		setNewNumber("");
+	}
+
+	const updatePerson = () => {
+		const msg = `${newName} is already added to phonebook, replace the old number with a new one?`
+		if (window.confirm(msg)) {
+			const person = persons.find(p => p.name === newName);
+			const changedPerson = { ...person, number: newNumber };
+			const id = changedPerson.id;
+
+			personService
+				.update(id, changedPerson)
+				.then(returnedPerson => {
+					setPersons(persons.map(person => person.id === id ? returnedPerson : person));
+					resetInput();
+				})
+		}
+	}
+
 	const addPerson = (event) => {
 		event.preventDefault();
 
-		if (persons.some(({ name }) => name === newName)) {
-			alert(`${newName} is already added to phonebook`);
+		if (isPersonAdded()) {
+			updatePerson();
 			return;
 		}
 
@@ -31,8 +56,7 @@ const App = () => {
 			.create(newPerson)
 			.then(returnedPerson => {
 				setPersons(persons.concat(returnedPerson));
-				setNewName("");
-				setNewNumber("");
+				resetInput();
 			})
 	};
 
