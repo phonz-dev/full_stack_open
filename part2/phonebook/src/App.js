@@ -14,7 +14,7 @@ const App = () => {
 		axios
 			.get('http://localhost:3001/persons')
 			.then(response => setPersons(response.data))
-	},[])
+	}, [])
 
 	const addPerson = (event) => {
 		event.preventDefault();
@@ -25,9 +25,13 @@ const App = () => {
 		}
 
 		const newPerson = { name: newName, number: newNumber };
-		setPersons(persons.concat(newPerson));
-		setNewName("");
-		setNewNumber("");
+		axios
+			.post('http://localhost:3001/persons', newPerson)
+			.then(response => {
+				setPersons(persons.concat(response.data));
+				setNewName("");
+				setNewNumber("");
+			})
 	};
 
 	const handleNewName = (event) => {
@@ -46,8 +50,8 @@ const App = () => {
 		filter === ""
 			? persons
 			: persons.filter(({ name }) =>
-					name.toLowerCase().startsWith(filter.toLowerCase())
-			  );
+				name.toLowerCase().startsWith(filter.toLowerCase())
+			);
 
 	return (
 		<div>
