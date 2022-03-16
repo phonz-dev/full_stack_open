@@ -9,21 +9,6 @@
       "name": "Arto Hellas",
       "number": "123-758-2342",
       "id": 4
-    },
-    {
-      "name": "Ryan Holiday",
-      "number": "123-97123-1231",
-      "id": 6
-    },
-    {
-      "name": "Ada Lovelace",
-      "number": "8745-234",
-      "id": 7
-    },
-    {
-      "name": "Fonz Escolar",
-      "number": "9324-234",
-      "id": 8
     }
   ]
 }
