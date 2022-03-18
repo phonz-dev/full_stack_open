@@ -60,9 +60,23 @@ const generateId = () => {
 
 app.post('/api/persons', (request, response) => {
   const person = request.body;
+
+  if (!person.name || !person.number) {
+    return response.status(400).json({
+      error: 'name and number fields must not be empty'
+    })
+  }
+
+  if (persons.some(p => p.name === person.name)) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
+
   person.id = generateId();
   persons = persons.concat(person);
-  response.json(persons);
+
+  response.json(person);
 })
 
 app.delete('/api/persons/:id', (request, response) => {
