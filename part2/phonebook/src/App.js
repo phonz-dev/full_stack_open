@@ -70,11 +70,18 @@ const App = () => {
 		const newPerson = { name: newName, number: newNumber };
 		personService
 			.create(newPerson)
-			.then(returnedPerson => {
-				setPersons(persons.concat(returnedPerson));
-				setAddedMessage(`Added ${returnedPerson.name}`);
+			.then(createdPerson => {
+				setPersons(persons.concat(createdPerson));
+				setAddedMessage(`Added ${createdPerson.name}`);
 				setTimeout(() => {
 					setAddedMessage(null);
+				}, 5000);
+				resetInputs();
+			})
+			.catch(error => {
+				setErrorMessage(error.response.data);
+				setTimeout(() => {
+					setErrorMessage(null);
 				}, 5000);
 				resetInputs();
 			})
