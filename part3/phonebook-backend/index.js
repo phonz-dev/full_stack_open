@@ -17,6 +17,34 @@ morgan.token('data', (request, response) => {
   return JSON.stringify(request.body);
 })
 
+app.post('/api/persons', (request, response) => {
+  const body = request.body;
+
+  if (!body.name) {
+    return response.status(400).json({
+      error: 'name missing'
+    })
+  }
+
+  if (!body.number) {
+    return response.status(400).json({
+      error: 'number missing'
+    })
+  }
+
+  const newPerson = new Person({
+    name: body.name,
+    number: body.number,
+  })
+
+  newPerson.save().then(savedPerson => {
+    response.json(savedPerson);
+  })
+})
+
+app.get('/', (request, response) => {
+  response.send('<h1>Home Page</h1>')
+})
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
@@ -43,38 +71,25 @@ app.get('/api/persons/:id', (request, response) => {
   })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  Person.findByIdAndDelete(request.params.id).then(() => {
-    response.status(204).end();
-  })
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end;
+    })
+    .catch(error => next(error))
 })
 
-app.post('/api/persons', (request, response) => {
-  const body = request.body;
+const errorHandler = (error, request, response, next) => {
+  console.error(error);
 
-  if (!body.name) {
-    return response.status(400).json({
-      error: 'name missing'
-    })
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' });
   }
 
-  if (!body.number) {
-    return response.status(400).json({
-      error: 'number missing'
-    })
-  }
+  next(error)
+}
 
-  const newPerson = new Person({
-    name: body.name,
-    number: body.number,
-  })
-
-
-  newPerson.save().then(savedPerson => {
-    response.json(savedPerson);
-  })
-
-})
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

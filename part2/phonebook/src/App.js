@@ -92,6 +92,16 @@ const App = () => {
 		setFilter(event.target.value);
 	};
 
+	const handleDelete = id => {
+		const person = persons.find(person => person.id === id)
+		const ok = window.confirm(`Delete ${person.name}?`)
+
+		if (ok) {
+			personService.remove(id);
+			setPersons(persons.filter(person => person.id !== id))
+		}
+	}
+
 	const personsToShow =
 		filter === ""
 			? persons
@@ -124,7 +134,7 @@ const App = () => {
 				onNumChange={handleNewNumber}
 			/>
 			<h3>Numbers</h3>
-			<Persons persons={personsToShow} />
+			<Persons persons={personsToShow} handleDelete={handleDelete} />
 		</div>
 	);
 };
