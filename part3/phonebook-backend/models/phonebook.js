@@ -12,12 +12,37 @@ mongoose.connect(url)
     console.log('error connecting to MongoDB', error.message);
   })
 
+const numberValidator = numStr => {
+  const parts = numStr.split('-');
+
+  if (parts.length !== 2) {
+    return false;
+  }
+
+  return parts[0].length === 2 || parts[0].length === 3
+}
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
     minlength: 3
   },
-  number: String,
+  number: {
+    type: String,
+    minlength: 8,
+    validate: {
+      validator: numStr => {
+        const parts = numStr.split('-');
+
+        if (parts.length !== 2) {
+          return false;
+        }
+
+        return parts[0].length === 2 || parts[0].length === 3
+      },
+      message: ({ value }) => `${value} is not a valid phone number.`
+    }
+  },
 })
 
 personSchema.set('toJSON', {
