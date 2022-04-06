@@ -89,22 +89,36 @@ describe('total likes', () => {
 });
 
 describe('favorite blog', () => {
-  test('of empty list is undefined', () => {
+  test('of empty list is null', () => {
     const result = listHelper.favoriteBlog([]);
-    expect(result).toBe(undefined);
+    expect(result).toBe(null);
   });
 
-  test('of a non-empty list returns the most liked blog', () => {
+  test('of a non-empty list is the most liked blog', () => {
     const mostLikedBlog = {
-      _id: "5a422b3a1b54a676234d17f9",
       title: "Canonical string reduction",
       author: "Edsger W. Dijkstra",
-      url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
       likes: 12,
-      __v: 0
     };
 
     const result = listHelper.favoriteBlog(listWithMultipleBlogs);
     expect(result).toEqual(mostLikedBlog);
+  });
+})
+
+describe('most blogs', () => {
+  const authorWithMostBlogs = { 
+    author: 'Robert C. Martin', 
+    blogs: 3 
+  };
+
+  test('of empty list is null', () => {
+    const result = listHelper.mostBlogs([]);
+    expect(result).toBe(null);
+  });
+
+  test('of a non-empty list is the one with the most blogs', () => {
+    const result = listHelper.mostBlogs(listWithMultipleBlogs);
+    expect(result).toEqual(authorWithMostBlogs);
   })
 })

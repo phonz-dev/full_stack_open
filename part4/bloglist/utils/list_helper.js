@@ -1,28 +1,51 @@
+const _ = require('lodash');
+
 const dummy = (blogs) => {
   return 1;
 }
 
-const totalLikes = (blogList) => {
-  const reducer = (total, {likes}) => {
+const totalLikes = (blogs) => {
+  const reducer = (total, { likes }) => {
     return total + likes;
   };
 
-  return blogList.reduce(reducer, 0);
+  return blogs.reduce(reducer, 0);
 }
 
-const favoriteBlog = (blogList) => {
-  const mostLikesCount = 
-    Math.max(...blogList.map(({likes}) => likes));
+const favoriteBlog = (blogs) => {
+  if (!blogs.length) return null;
 
-  const mostLikedBlog = blogList.find((blog) => 
+  const mostLikesCount = 
+    Math.max(...blogs.map(({ likes }) => likes));
+
+  const mostLikedBlog = blogs.find((blog) => 
     blog.likes === mostLikesCount
   );
 
-  return mostLikedBlog;
+  const { title, author, likes } = mostLikedBlog;
+
+  return { title, author, likes };
+}
+
+const mostBlogs = (blogs) => {
+  const authorsBlogCount = _.countBy(blogs, 'author');
+  const mostBlogsCount = Math.max(..._.values(authorsBlogCount));
+
+  let authorWithMostBlogs = null;
+  for (let author in authorsBlogCount) {
+    let count = authorsBlogCount[author];
+
+    if (count === mostBlogsCount) {
+      authorWithMostBlogs = {author, blogs: count};
+    }
+  }
+
+  return authorWithMostBlogs
 }
 
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
