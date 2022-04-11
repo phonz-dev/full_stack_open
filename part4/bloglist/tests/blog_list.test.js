@@ -66,6 +66,23 @@ test('a valid blog can be added', async () => {
 	expect(titles).toContain('TDD harms architecture')
 })
 
+test('if the "likes" property is undefined, defaults to zero', async () => {
+	const blog = {
+		title: 'TDD harms architecture',
+		author: 'Robert C. Martin',
+		url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+	}
+
+	await api
+		.post('/api/blogs')
+		.send(blog)
+
+	const response = await api.get('/api/blogs')
+	const blogToTest = response.body[response.body.length - 1]
+
+	expect(blogToTest.likes).toBe(0)
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
