@@ -35,7 +35,7 @@ test('all blogs are returned', async () => {
 	const response = await api.get('/api/blogs')
 
 	expect(response.body).toHaveLength(initialBlogs.length)
-})
+}, 100000)
 
 test('blogs returned has an "id" property', async () => {
 	const response = await api.get('/api/blogs')
@@ -81,6 +81,18 @@ test('if the "likes" property is undefined, defaults to zero', async () => {
 	const blogToTest = response.body[response.body.length - 1]
 
 	expect(blogToTest.likes).toBe(0)
+})
+
+test('if the title and url are missing, responds with status code 400', async () => {
+	const blog = {
+		author: 'Edsger W. Dijkstra',
+		likes: 12,
+	}
+
+	await api
+		.post('/api/blogs')
+		.send(blog)
+		.expect(400)
 })
 
 afterAll(() => {

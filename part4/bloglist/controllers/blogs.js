@@ -1,24 +1,20 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
-blogsRouter.get('/', async (request, response, next) => {
-	try {
-		const blogs = await Blog.find({})
-		response.json(blogs)
-	} catch (exception) {
-		next(exception)
-	}
+blogsRouter.get('/', async (request, response) => {
+	const blogs = await Blog.find({})
+	response.json(blogs)
 })
 
-blogsRouter.post('/', async (request, response, next) => {
+blogsRouter.post('/', async (request, response) => {
 	const body = request.body
 	const blog = { ...body, likes: body.likes || 0 }
 
-	try {
-		const returnedBlog = await new Blog(blog).save()
+	const returnedBlog = await new Blog(blog).save()
+	if (returnedBlog) {
 		response.status(201).json(returnedBlog)
-	} catch (exception) {
-		next(exception)
+	} else {
+		response.status(400).send({ error: 'title and url must not be empty' })
 	}
 })
 
