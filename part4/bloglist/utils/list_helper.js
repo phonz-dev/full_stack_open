@@ -1,79 +1,80 @@
-const _ = require('lodash');
+const _ = require('lodash')
 
 const dummy = (blogs) => {
-  return 1;
+	console.log(blogs)
+	return 1
 }
 
 const totalLikes = (blogs) => {
-  const reducer = (total, { likes }) => {
-    return total + likes;
-  };
+	const reducer = (total, { likes }) => {
+		return total + likes
+	}
 
-  return blogs.reduce(reducer, 0);
+	return blogs.reduce(reducer, 0)
 }
 
 const favoriteBlog = (blogs) => {
-  if (!blogs.length) return null;
+	if (!blogs.length) return null
 
-  const mostLikesCount = 
-    Math.max(...blogs.map(({ likes }) => likes));
+	const mostLikesCount =
+    Math.max(...blogs.map(({ likes }) => likes))
 
-  const mostLikedBlog = blogs.find((blog) => 
-    blog.likes === mostLikesCount
-  );
+	const mostLikedBlog = blogs.find((blog) =>
+		blog.likes === mostLikesCount
+	)
 
-  const { title, author, likes } = mostLikedBlog;
+	const { title, author, likes } = mostLikedBlog
 
-  return { title, author, likes };
+	return { title, author, likes }
 }
 
 const mostBlogs = (blogs) => {
-  const authorsBlogCount = _.countBy(blogs, 'author');
-  const mostBlogsCount = Math.max(..._.values(authorsBlogCount));
+	const authorsBlogCount = _.countBy(blogs, 'author')
+	const mostBlogsCount = Math.max(..._.values(authorsBlogCount))
 
-  let authorWithMostBlogs = null;
-  for (let author in authorsBlogCount) {
-    let count = authorsBlogCount[author];
+	let authorWithMostBlogs = null
+	for (let author in authorsBlogCount) {
+		let count = authorsBlogCount[author]
 
-    if (count === mostBlogsCount) {
-      authorWithMostBlogs = {author, blogs: count};
-    }
-  }
+		if (count === mostBlogsCount) {
+			authorWithMostBlogs = { author, blogs: count }
+		}
+	}
 
-  return authorWithMostBlogs
+	return authorWithMostBlogs
 }
 
 const mostLikes = (blogs) => {
-  if (!blogs.length) return null;
+	if (!blogs.length) return null
 
-  const authorsLikeCount = blogs.reduce((counts, { author, likes }) => {
-    if (author in counts) {
-      counts[author] += likes;
-    } else {
-      counts[author] = likes;
-    }
+	const authorsLikeCount = blogs.reduce((counts, { author, likes }) => {
+		if (author in counts) {
+			counts[author] += likes
+		} else {
+			counts[author] = likes
+		}
 
-    return counts;
-  }, {});
+		return counts
+	}, {})
 
-  const mostLikesCount = Math.max(..._.values(authorsLikeCount));
+	const mostLikesCount = Math.max(..._.values(authorsLikeCount))
 
-  let authorWithMostLikes = null;
-  for (let author in authorsLikeCount) {
-    let likes = authorsLikeCount[author];
+	let authorWithMostLikes = null
+	for (let author in authorsLikeCount) {
+		let likes = authorsLikeCount[author]
 
-    if (likes === mostLikesCount) {
-      authorWithMostLikes = {author, likes};
-    }
-  }
+		if (likes === mostLikesCount) {
+			authorWithMostLikes = { author, likes }
+		}
+	}
 
-  return authorWithMostLikes
+	return authorWithMostLikes
 }
 
 module.exports = {
-  dummy,
-  totalLikes,
-  favoriteBlog,
-  mostBlogs,
-  mostLikes
+	dummy,
+	totalLikes,
+	favoriteBlog,
+	mostBlogs,
+	mostLikes
 }
