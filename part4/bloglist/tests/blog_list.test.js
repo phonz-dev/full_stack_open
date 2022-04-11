@@ -45,6 +45,27 @@ test('blogs returned has an "id" property', async () => {
 	}
 })
 
+test('a valid blog can be added', async () => {
+	const blog = {
+		title: 'TDD harms architecture',
+		author: 'Robert C. Martin',
+		url: 'http://blog.cleancoder.com/uncle-bob/2017/03/03/TDD-Harms-Architecture.html',
+		likes: 0,
+	}
+
+	await api
+		.post('/api/blogs')
+		.send(blog)
+		.expect(201)
+		.expect('Content-Type', /application\/json/)
+
+	const response = await api.get('/api/blogs')
+	expect(response.body).toHaveLength(initialBlogs.length + 1)
+
+	const titles = response.body.map(blog => blog.title)
+	expect(titles).toContain('TDD harms architecture')
+})
+
 afterAll(() => {
 	mongoose.connection.close()
 })
