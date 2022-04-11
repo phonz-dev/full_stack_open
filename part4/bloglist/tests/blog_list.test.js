@@ -1,27 +1,14 @@
-const mongoose = require('mongoose')
 const supertest = require('supertest')
+const mongoose = require('mongoose')
+const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
-const Blog = require('../models/blog')
 
-const initialBlogs = [
-	{
-		title: 'React patterns',
-		author: 'Michael Chan',
-		url: 'https://reactpatterns.com/',
-		likes: 7,
-	},
-	{
-		title: 'Go To Statement Considered Harmful',
-		author: 'Edsger W. Dijkstra',
-		url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
-		likes: 5,
-	},
-]
+const Blog = require('../models/blog')
 
 beforeEach(async () => {
 	await Blog.deleteMany({})
-	await Blog.insertMany(initialBlogs)
+	await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -32,15 +19,15 @@ test('blogs are returned as json', async () => {
 })
 
 test('all blogs are returned', async () => {
-	const response = await api.get('/api/blogs')
+	const blogs = await helper.blogsInDb()
 
-	expect(response.body).toHaveLength(initialBlogs.length)
+	expect(blogs).toHaveLength(helper.initialBlogs.length)
 }, 100000)
 
 test('blogs returned has an "id" property', async () => {
-	const response = await api.get('/api/blogs')
+	const blogs = await helper.blogsInDb()
 
-	for (let blog of response.body) {
+	for (let blog of blogs) {
 		expect(blog.id).toBeDefined()
 	}
 })
@@ -59,14 +46,14 @@ test('a valid blog can be added', async () => {
 		.expect(201)
 		.expect('Content-Type', /application\/json/)
 
-	const response = await api.get('/api/blogs')
-	expect(response.body).toHaveLength(initialBlogs.length + 1)
+	const blogsAfterAdding = await helper.blogsInDb()
+	expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length + 1)
 
-	const titles = response.body.map(blog => blog.title)
+	const titles = blogsAfterAdding.map(blog => blog.title)
 	expect(titles).toContain('TDD harms architecture')
 })
 
-test('if the "likes" property is undefined, defaults to zero', async () => {
+test('if the "likes" property is undefined, it defaults to zero', async () => {
 	const blog = {
 		title: 'TDD harms architecture',
 		author: 'Robert C. Martin',
@@ -77,13 +64,14 @@ test('if the "likes" property is undefined, defaults to zero', async () => {
 		.post('/api/blogs')
 		.send(blog)
 
-	const response = await api.get('/api/blogs')
-	const blogToTest = response.body[response.body.length - 1]
+	const blogsAfterAdding = await helper.blogsInDb()
+	const recentlyAddedBlog = blogsAfterAdding[blogsAfterAdding.length - 1]
 
-	expect(blogToTest.likes).toBe(0)
+	expect(recentlyAddedBlog.likes).toBe(0)
+	expect(recentlyAddedBlog.title).toBe('TDD harms architecture')
 })
 
-test('if the title and url are missing, responds with status code 400', async () => {
+test('blog without title and/or url is not added', async () => {
 	const blog = {
 		author: 'Edsger W. Dijkstra',
 		likes: 12,
@@ -93,6 +81,9 @@ test('if the title and url are missing, responds with status code 400', async ()
 		.post('/api/blogs')
 		.send(blog)
 		.expect(400)
+
+	const blogsAfterAdding = await helper.blogsInDb()
+	expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
 })
 
 afterAll(() => {
