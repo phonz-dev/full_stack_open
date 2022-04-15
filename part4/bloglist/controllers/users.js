@@ -10,6 +10,13 @@ usersRouter.get('/', async (req, res) => {
 usersRouter.post('/', async (req, res) => {
 	let { username, name, password } = req.body
 
+	const userExist = await User.findOne({ username })
+	if (userExist) {
+		return res.status(400).json({
+			error: 'username must be unique'
+		})
+	}
+
 	const saltRounds = 10
 	password = await bcrypt.hash(password, saltRounds)
 

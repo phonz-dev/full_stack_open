@@ -162,6 +162,49 @@ describe('when there is only one user in db', () => {
 		const usernames = usersAtEnd.map(({ username }) => username)
 		expect(usernames).toContain(newUser.username)
 	})
+
+	test('fails with status 400 and proper message when the username already exist', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const newUser = {
+			username: 'root',
+			name: 'Groot',
+			password: 'iamgroot'
+		}
+
+		const result = await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(400)
+			.expect('Content-Type', /application\/json/)
+
+		expect(result.body.error).toBe('username must be unique')
+
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
+	})
+
+	test('user isn\'t created with invalid data', async () => {
+		const usersAtStart = await helper.usersInDb()
+
+		const invalidUsername = 'ju'
+
+		const newUser = {
+			username: invalidUsername,
+			name: 'Invalid Me',
+			password: 'iaminvalid'
+		}
+
+		await api
+			.post('/api/users')
+			.send(newUser)
+
+		const usersAtEnd = await helper.usersInDb()
+		expect(usersAtEnd).toEqual(usersAtStart)
+
+		const usernames = usersAtEnd.map(({ username }) => username)
+		expect(usernames).not.toContain(invalidUsername)
+	})
 })
 
 afterAll(() => {
