@@ -3,7 +3,7 @@ Content-Type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFlc2NvbGFyIiwiaWQiOiI2MjU5MGJkYTI2YzU4ZTQ1YzZhOGMwOGMiLCJpYXQiOjE2NTAwNzQwMTIsImV4cCI6MTY1MDA3NzYxMn0.KrFh_DNye_GEgkLkzAsZaFP2GWvmc3FV5TtJM05wBs4
 
 {
-  "title": "Token Authentication",
+  "title": "Token Extractor",
   "author": "Fonz",
   "url": "https://tokenauthentication.com",
   "likes": 100
