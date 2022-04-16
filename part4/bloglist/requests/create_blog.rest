@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFlc2NvbGFyIiwiaWQiOiI2MjU5MGJkYTI2YzU4ZTQ1YzZhOGMwOGMiLCJpYXQiOjE2NTAwNzQwMTIsImV4cCI6MTY1MDA3NzYxMn0.KrFh_DNye_GEgkLkzAsZaFP2GWvmc3FV5TtJM05wBs4
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFlc2NvbGFyIiwiaWQiOiI2MjU5MGJkYTI2YzU4ZTQ1YzZhOGMwOGMiLCJpYXQiOjE2NTAwODc5NTUsImV4cCI6MTY1MDA5MTU1NX0.00Jrpd6ihs3ls4_kKQHTrhLXMQv9cetKwio_I86rL9w
 
 {
-  "title": "Token Extractor",
-  "author": "Fonz",
+  "title": "Computer Programming",
+  "author": "Fonzy Escolar",
   "url": "https://tokenauthentication.com",
   "likes": 100
 }
