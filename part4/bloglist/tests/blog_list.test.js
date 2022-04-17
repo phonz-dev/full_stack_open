@@ -37,7 +37,24 @@ describe('when there is initially some blogs saved', () => {
 })
 
 describe('addition of a new blog', () => {
-	test('succeeds with a valid data', async () => {
+	let token
+	beforeEach(async () => {
+		await User.deleteMany({})
+
+		const password = await bcrypt.hash('sekret', 10)
+		const user = new User({ username: 'pampi', password })
+
+		await user.save()
+
+		const response = await api
+			.post('/api/login')
+			.send({ username: 'pampi', password: 'sekret' })
+
+		token = response.body.token
+	})
+
+
+	test('succeeds with valid data', async () => {
 		const blog = {
 			title: 'TDD harms architecture',
 			author: 'Robert C. Martin',
@@ -48,6 +65,7 @@ describe('addition of a new blog', () => {
 		await api
 			.post('/api/blogs')
 			.send(blog)
+			.set('Authorization', `bearer ${token}`)
 			.expect(201)
 			.expect('Content-Type', /application\/json/)
 
@@ -86,6 +104,22 @@ describe('addition of a new blog', () => {
 			.post('/api/blogs')
 			.send(blog)
 			.expect(400)
+
+		const blogsAfterAdding = await helper.blogsInDb()
+		expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
+	})
+
+	test('fails with status 401 if token is invalid or isn\'t provided', async () => {
+		const blog = {
+			author: 'Jose Rizal',
+			likes: 500
+		}
+
+		await api
+			.post('/api/blogs')
+			.send(blog)
+			.set('Authorization', 'wrong')
+			.expect(401)
 
 		const blogsAfterAdding = await helper.blogsInDb()
 		expect(blogsAfterAdding).toHaveLength(helper.initialBlogs.length)
