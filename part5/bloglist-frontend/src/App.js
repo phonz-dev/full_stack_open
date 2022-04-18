@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blogs from './components/Blogs'
-import Input from './components/Input'
+import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -16,14 +16,28 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
+  }, [])
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
       const user = await loginService.login({
         username, password
       })
+
       setUser(user)
       blogService.setToken(user.token)
+      window.localStorage.setItem(
+        'loggedBlogAppUser', JSON.stringify(user)
+      )
+
       setUsername('')
       setPassword('')
     } catch (error) {
@@ -31,36 +45,37 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
+  const handleLogout = () => {
+    window.localStorage.removeItem('loggedBlogAppUser')
+    setUser(null)
+  }
+
+  const display = () => {
+    if (user === null) {
+      return <LoginForm 
+        username={username}
+        password={password}
+        handleLogin={handleLogin}
+        setUsername={setUsername}
+        setPassword={setPassword}
+      />
+    }
+
+    return(
       <>
-        <h2>log in to application</h2>
-        <form onSubmit={handleLogin}>
-          <Input 
-            text='username:'
-            type='text'
-            value={username}
-            handleChange={({target}) => setUsername(target.value)}
-          />
-          <Input
-            text='password:'
-            type='password'
-            value={password}
-            name='password'
-            handleChange={({target}) => setPassword(target.value)}
-          />
-          <button type='submit'>login</button>
-        </form>
+        <h2>blogs</h2>
+        <p>
+          {user.name} logged in
+          <button onClick={handleLogout}>logout</button>
+        </p>
+        <Blogs blogs={blogs} />
       </>
-  )
+    )
+  }
 
   return (
     <div>
-      {user === null 
-        ? loginForm()
-        : <Blogs blogs={blogs} />
-      }
-
-      
+     {display()}     
     </div>
   )
 }
