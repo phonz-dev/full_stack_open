@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -13,6 +15,7 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -29,6 +32,13 @@ const App = () => {
     }
   }, [])
 
+  const notify = (message, type = 'info') => {
+    setNotification({ message, type })
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000)
+  }
+
   const handleLogin = async event => {
     event.preventDefault()
     try {
@@ -42,15 +52,18 @@ const App = () => {
         'loggedBlogAppUser', JSON.stringify(user)
       )
 
+      notify(`Welcome back ${user.name}!`)
+
       setUsername('')
       setPassword('')
     } catch (error) {
-      console.error('Error', error.message)
+      notify(error.response.data.error, 'error')
     }
   }
 
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
+    notify(`See you soon ${user.name}!`)
     setUser(null)
   }
 
@@ -69,10 +82,10 @@ const App = () => {
       setAuthor('')
       setUrl('')
 
-      console.log('Blog created!')
+      notify(`a new blog ${title} by ${author} added`)
 
     } catch (error) {
-      console.error('Error', error.message)
+      notify(error.response.data.error, 'error')
     }
   }
 
@@ -112,6 +125,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification notification={notification}/>
      {display()}     
     </div>
   )
