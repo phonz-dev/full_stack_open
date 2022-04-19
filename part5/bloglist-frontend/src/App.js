@@ -18,7 +18,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      setBlogs(blogs)
+      const blogsCopy = [ ...blogs ]
+      setBlogs(blogsCopy.sort((b1, b2) => b2.likes - b1.likes))
     })  
   }, [])
 
@@ -82,6 +83,46 @@ const App = () => {
     }
   }
 
+  const blogFormRef = useRef()
+ 
+  const incrementLikesOf = async id => {
+    const blogToUpdate = blogs.find(blog => blog.id === id)
+    const newBlog = { 
+      user: blogToUpdate.user.id,
+      likes: blogToUpdate.likes + 1,
+      author: blogToUpdate.author,
+      title: blogToUpdate.title,
+      url: blogToUpdate.url
+    }
+
+    try {
+      const updatedBlog = await blogService.update(id, newBlog)
+      const updatedBlogs = blogs.map(blog => blog.id === id
+        ? updatedBlog : blog
+      )
+      setBlogs(updatedBlogs.sort((b1, b2) => b2.likes - b1.likes))
+    } catch (error) {
+      notify(error.response.data.error, 'error')
+    }
+  }
+
+  const deleteBlogOf = async id => {
+    const blogToDelete = blogs.find(blog => blog.id === id)
+    const ok = window.confirm(
+      `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`
+      )
+    
+    try {
+      if (ok) {
+        await blogService.remove(id)
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        notify(`${blogToDelete.title} deleted`)
+      }
+    } catch (error) {
+      notify(error.message, 'error')
+    }
+  }
+
   const display = () => {
     if (user === null) {
       return <LoginForm 
@@ -105,33 +146,13 @@ const App = () => {
           <BlogForm createBlog={addBlog}/>
         </Togglable>
 
-        <Blogs blogs={blogs} incrementLikesOf={incrementLikesOf} />
+        <Blogs
+          blogs={blogs} 
+          incrementLikesOf={incrementLikesOf} 
+          deleteBlogOf={deleteBlogOf}
+        />
       </>
     )
-  }
-
-  const blogFormRef = useRef()
- 
-  const incrementLikesOf = async id => {
-    try {
-      const blogToUpdate = blogs.find(blog => blog.id === id)
-      const newBlog = { 
-        ...blogToUpdate, 
-        likes: blogToUpdate.likes + 1,
-        user: blogToUpdate.user.id
-      }
-      const updatedBlog = await blogService.update(id, newBlog)
-      const updatedBlogs = blogs.map(blog => blog.id === id
-        ? updatedBlog : blog
-      )
-
-      setBlogs(updatedBlogs.sort((blog1, blog2) => (
-        blog2.likes - blog1.likes
-      )))
-    } catch (error) {
-      notify(error.response.data.error, 'error')
-    }
-
   }
 
   return (
