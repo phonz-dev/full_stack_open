@@ -1,20 +1,23 @@
+import { useState } from "react"
 import Input from "./Input"
 
-const BlogForm = props => {
-  const {
-    handleBlogCreation,
-    setTitle,
-    setAuthor,
-    setUrl,
-    title,
-    author,
-    url
-  } = props
+const BlogForm = ({createBlog}) => {
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const addBlog = event => {
+    event.preventDefault()
+    createBlog({title, author, url})
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
 
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={handleBlogCreation}>
+      <form onSubmit={addBlog}>
         <Input 
           text='title:'
           type='text'
