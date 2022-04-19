@@ -105,12 +105,31 @@ const App = () => {
           <BlogForm createBlog={addBlog}/>
         </Togglable>
 
-        <Blogs blogs={blogs} />
+        <Blogs blogs={blogs} incrementLikesOf={incrementLikesOf} />
       </>
     )
   }
 
   const blogFormRef = useRef()
+ 
+  const incrementLikesOf = async id => {
+    try {
+      const blogToUpdate = blogs.find(blog => blog.id === id)
+      const newBlog = { 
+        ...blogToUpdate, 
+        likes: blogToUpdate.likes + 1,
+        user: blogToUpdate.user.id
+      }
+      const updatedBlog = await blogService.update(id, newBlog)
+
+      setBlogs(blogs.map(blog => blog.id === id
+        ? updatedBlog : blog
+      ))
+    } catch (error) {
+      notify(error.response.data.error, 'error')
+    }
+
+  }
 
   return (
     <div>
