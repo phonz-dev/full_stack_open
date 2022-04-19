@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
+
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -71,6 +73,8 @@ const App = () => {
     event.preventDefault()
 
     try {
+      blogFormRef.current.toggleVisibility()
+
       const newBlog = {
         title, author, url
       }
@@ -85,7 +89,7 @@ const App = () => {
       notify(`a new blog ${title} by ${author} added`)
 
     } catch (error) {
-      notify(error.response.data.error, 'error')
+      notify(error.message, 'error')
     }
   }
 
@@ -108,20 +112,24 @@ const App = () => {
           <button onClick={handleLogout}>logout</button>
         </p>
         
-        <BlogForm 
-          handleBlogCreation={handleBlogCreation}
-          setTitle={setTitle}
-          setAuthor={setAuthor}
-          setUrl={setUrl}
-          title={title}
-          author={author}
-          url={url}
-        />
+        <Togglable buttonLabel='new note' ref={blogFormRef}>
+          <BlogForm
+            handleBlogCreation={handleBlogCreation}
+            setTitle={setTitle}
+            setAuthor={setAuthor}
+            setUrl={setUrl}
+            title={title}
+            author={author}
+            url={url}
+          />
+        </Togglable>
 
         <Blogs blogs={blogs} />
       </>
     )
   }
+
+  const blogFormRef = useRef()
 
   return (
     <div>
