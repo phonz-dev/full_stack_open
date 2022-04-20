@@ -20,7 +20,7 @@ const App = () => {
     blogService.getAll().then(blogs => {
       const blogsCopy = [ ...blogs ]
       setBlogs(blogsCopy.sort((b1, b2) => b2.likes - b1.likes))
-    })  
+    })
   }, [])
 
   useEffect(() => {
@@ -84,10 +84,10 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
- 
+
   const incrementLikesOf = async id => {
     const blogToUpdate = blogs.find(blog => blog.id === id)
-    const newBlog = { 
+    const newBlog = {
       user: blogToUpdate.user.id,
       likes: blogToUpdate.likes + 1,
       author: blogToUpdate.author,
@@ -110,8 +110,8 @@ const App = () => {
     const blogToDelete = blogs.find(blog => blog.id === id)
     const ok = window.confirm(
       `Remove blog ${blogToDelete.title} by ${blogToDelete.author}?`
-      )
-    
+    )
+
     try {
       if (ok) {
         await blogService.remove(id)
@@ -125,7 +125,7 @@ const App = () => {
 
   const display = () => {
     if (user === null) {
-      return <LoginForm 
+      return <LoginForm
         username={username}
         password={password}
         handleLogin={handleLogin}
@@ -141,14 +141,14 @@ const App = () => {
           {user.name} logged in
           <button onClick={handleLogout}>logout</button>
         </p>
-        
+
         <Togglable buttonLabel='create new blog' ref={blogFormRef}>
           <BlogForm createBlog={addBlog}/>
         </Togglable>
 
         <Blogs
-          blogs={blogs} 
-          incrementLikesOf={incrementLikesOf} 
+          blogs={blogs}
+          incrementLikesOf={incrementLikesOf}
           deleteBlogOf={deleteBlogOf}
         />
       </>
@@ -158,7 +158,7 @@ const App = () => {
   return (
     <div>
       <Notification notification={notification}/>
-     {display()}     
+      {display()}
     </div>
   )
 }

@@ -1,16 +1,16 @@
 const Input = props => {
-  const { 
+  const {
     type,
     text,
     value,
     name,
     handleChange
-   } = props
+  } = props
 
   return (
     <div>
       {text}
-      <input 
+      <input
         type={type}
         value={value}
         name={name}

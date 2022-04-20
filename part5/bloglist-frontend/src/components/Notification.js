@@ -4,8 +4,8 @@ const Notification = ({ notification }) => {
   if (notification === null) {
     return null
   }
-  
-  const color = notification.type === 'info' 
+
+  const color = notification.type === 'info'
     ? 'green' : 'red'
   const styles = {
     borderSize: '3px',

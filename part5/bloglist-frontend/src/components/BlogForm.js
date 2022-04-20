@@ -1,14 +1,14 @@
-import { useState } from "react"
-import Input from "./Input"
+import { useState } from 'react'
+import Input from './Input'
 
-const BlogForm = ({createBlog}) => {
+const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const addBlog = event => {
     event.preventDefault()
-    createBlog({title, author, url})
+    createBlog({ title, author, url })
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -18,23 +18,23 @@ const BlogForm = ({createBlog}) => {
     <>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
-        <Input 
+        <Input
           text='title:'
           type='text'
           value={title}
-          handleChange={({target}) => setTitle(target.value)}
+          handleChange={({ target }) => setTitle(target.value)}
         />
-        <Input 
+        <Input
           text='author:'
           type='text'
           value={author}
-          handleChange={({target}) => setAuthor(target.value)}
+          handleChange={({ target }) => setAuthor(target.value)}
         />
-        <Input 
+        <Input
           text='url:'
           type='text'
           value={url}
-          handleChange={({target}) => setUrl(target.value)}
+          handleChange={({ target }) => setUrl(target.value)}
         />
         <button type="submit">create</button>
       </form>

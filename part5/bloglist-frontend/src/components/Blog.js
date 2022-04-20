@@ -1,9 +1,9 @@
-import { useState } from "react"
+import { useState } from 'react'
 
 const Blog = props => {
   const {
-    blog, 
-    incrementLikes, 
+    blog,
+    incrementLikes,
     deleteBlog
   } = props
 
@@ -46,13 +46,13 @@ const Blog = props => {
             <button onClick={incrementLikes}>like</button>
           </div>
           <div>{blog.author}</div>
-          <button 
-            onClick={deleteBlog} 
+          <button
+            onClick={deleteBlog}
             style={removeButtonStyle}>remove</button>
         </div>
       </div>
-      
-    </div>  
+
+    </div>
   )
 }
 

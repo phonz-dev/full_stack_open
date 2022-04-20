@@ -1,4 +1,4 @@
-import Input from "./Input"
+import Input from './Input'
 
 const LoginForm = props => {
   const {
@@ -13,18 +13,18 @@ const LoginForm = props => {
     <>
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
-        <Input 
+        <Input
           text='username:'
           type='text'
           value={username}
-          handleChange={({target}) => setUsername(target.value)}
+          handleChange={({ target }) => setUsername(target.value)}
         />
         <Input
           text='password:'
           type='password'
           value={password}
           name='password'
-          handleChange={({target}) => setPassword(target.value)}
+          handleChange={({ target }) => setPassword(target.value)}
         />
         <button type='submit'>login</button>
       </form>
