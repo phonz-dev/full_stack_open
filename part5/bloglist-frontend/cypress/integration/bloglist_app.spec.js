@@ -33,4 +33,22 @@ describe('Blog app', function() {
         .and('have.css', 'color', 'rgb(255, 0, 0)')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.get('#username').type('aescolar')
+      cy.get('#password').type('sekret')
+      cy.contains('login').click()
+    })
+
+    it('a blog can be created', function() {
+      cy.contains('create new blog').click()
+      cy.get('#title').type('Testing with Cypress')
+      cy.get('#author').type('Fonz Escolar')
+      cy.get('#url').type('fonz-cypress.io')
+      cy.get('#createButton').click()
+
+      cy.contains('Testing with Cypress Fonz Escolar')
+    })
+  })
 })

@@ -36,7 +36,7 @@ const App = () => {
     setNotification({ message, type })
     setTimeout(() => {
       setNotification(null)
-    }, 5000)
+    }, 3000)
   }
 
   const handleLogin = async event => {
