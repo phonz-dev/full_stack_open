@@ -16,10 +16,7 @@ describe('Blog app', function() {
 
   describe('Login', function() {
     it('succeeds with correct credentials', function() {
-      cy.get('#username').type('aescolar')
-      cy.get('#password').type('sekret')
-      cy.contains('login').click()
-
+      cy.login({ username: 'aescolar', password: 'sekret' })
       cy.contains('Alphonzo Escolar logged in')
     })
 
@@ -36,19 +33,30 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.get('#username').type('aescolar')
-      cy.get('#password').type('sekret')
-      cy.contains('login').click()
+      cy.login({ username: 'aescolar', password: 'sekret' })
     })
 
     it('a blog can be created', function() {
-      cy.contains('create new blog').click()
-      cy.get('#title').type('Testing with Cypress')
-      cy.get('#author').type('Fonz Escolar')
-      cy.get('#url').type('fonz-cypress.io')
-      cy.get('#createButton').click()
+      cy.createBlog({
+        title: 'Testing with Cypress',
+        author: 'Fonz Escolar',
+        url: 'fonz-cypress.io'
+      })
 
       cy.contains('Testing with Cypress Fonz Escolar')
+    })
+
+    it.only('a blog can be liked', function() {
+      cy.createBlog({
+        title: 'Testing with Cypress',
+        author: 'Fonz Escolar',
+        url: 'fonz-cypress.io'
+      })
+
+      cy.contains('view').click()
+      cy.contains('likes 0')
+      cy.contains('like').click()
+      cy.contains('likes 1')
     })
   })
 })
