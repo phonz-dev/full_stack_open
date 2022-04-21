@@ -32,4 +32,12 @@ describe('<Blog />', () => {
     const hiddenElement = container.querySelector('.toggledComponent')
     expect(hiddenElement).toHaveStyle('display: none')
   })
+
+  test('toggles more blog details when view button is clicked', () => {
+    const viewButton = screen.getByText('view')
+    userEvent.click(viewButton)
+
+    const hiddenBlogDetails = container.querySelector('.toggledComponent')
+    expect(hiddenBlogDetails).not.toHaveStyle('display: none')
+  })
 })
