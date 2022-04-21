@@ -1,12 +1,18 @@
 describe('Blog app', function() {
   beforeEach(function() {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
-    const user = {
+    const user1 = {
       name: 'Alphonzo Escolar',
       username: 'aescolar',
       password: 'sekret'
     }
-    cy.request('POST', 'http://localhost:3003/api/users', user)
+    const user2 = {
+      name: 'Marcus Aurelius',
+      username: 'emperor',
+      password: 'wisdom'
+    }
+    cy.request('POST', 'http://localhost:3003/api/users', user1)
+    cy.request('POST', 'http://localhost:3003/api/users', user2)
     cy.visit('http://localhost:3000')
   })
 
@@ -46,17 +52,28 @@ describe('Blog app', function() {
       cy.contains('Testing with Cypress Fonz Escolar')
     })
 
-    it.only('a blog can be liked', function() {
-      cy.createBlog({
-        title: 'Testing with Cypress',
-        author: 'Fonz Escolar',
-        url: 'fonz-cypress.io'
+    describe('When a blog exist', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'Testing with Cypress',
+          author: 'Fonz Escolar',
+          url: 'fonz-cypress.io'
+        })
       })
 
-      cy.contains('view').click()
-      cy.contains('likes 0')
-      cy.contains('like').click()
-      cy.contains('likes 1')
+      it('it can be liked', function() {
+        cy.contains('view').click()
+        cy.contains('likes 0')
+        cy.contains('like').click()
+        cy.contains('likes 1')
+      })
+
+      it.only('it can be deleted', function() {
+        cy.contains('view').click()
+        cy.contains('remove').click()
+        cy.get('html').should('not.contain', 'Testing with Cypress')
+      })
+
     })
   })
 })
