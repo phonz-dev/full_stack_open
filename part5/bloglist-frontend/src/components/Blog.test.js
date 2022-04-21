@@ -6,17 +6,16 @@ import Blog from './Blog'
 
 describe('<Blog />', () => {
   let container
+  let incrementLikes = jest.fn()
+  let deleteBlog = jest.fn()
+  const blog = {
+    title: 'Testing React Applications',
+    author: 'Kent Dodds',
+    url: 'testingreact.io',
+    likes: 1034
+  }
 
   beforeEach(() => {
-    const incrementLikes = jest.fn()
-    const deleteBlog = jest.fn()
-    const blog = {
-      title: 'Testing React Applications',
-      author: 'Kent Dodds',
-      url: 'testingreact.io',
-      likes: 1034
-    }
-
     container = render(
       <Blog
         blog={blog}
@@ -39,5 +38,13 @@ describe('<Blog />', () => {
 
     const hiddenBlogDetails = container.querySelector('.toggledComponent')
     expect(hiddenBlogDetails).not.toHaveStyle('display: none')
+  })
+
+  test('when the like button is clicked twice, calls like event handler that number of times',  () => {
+    const likeButton = screen.getByText('like')
+    userEvent.click(likeButton)
+    userEvent.click(likeButton)
+
+    expect(incrementLikes.mock.calls).toHaveLength(2)
   })
 })
