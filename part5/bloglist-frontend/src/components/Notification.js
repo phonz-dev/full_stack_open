@@ -22,7 +22,7 @@ const Notification = ({ notification }) => {
   }
 
   return (
-    <p style={styles}>
+    <p style={styles} className='notification'>
       { notification.message }
     </p>
   )

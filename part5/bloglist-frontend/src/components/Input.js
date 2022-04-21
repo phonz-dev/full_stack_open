@@ -1,5 +1,6 @@
 const Input = props => {
   const {
+    id,
     type,
     text,
     value,
@@ -12,6 +13,7 @@ const Input = props => {
     <div>
       {text}
       <input
+        id={id}
         type={type}
         value={value}
         name={name}

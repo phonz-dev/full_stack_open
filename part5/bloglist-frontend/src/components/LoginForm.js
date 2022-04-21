@@ -14,12 +14,14 @@ const LoginForm = props => {
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>
         <Input
+          id='username'
           text='username:'
           type='text'
           value={username}
           handleChange={({ target }) => setUsername(target.value)}
         />
         <Input
+          id='password'
           text='password:'
           type='password'
           value={password}
