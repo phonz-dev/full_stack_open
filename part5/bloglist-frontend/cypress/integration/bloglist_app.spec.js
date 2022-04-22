@@ -52,28 +52,45 @@ describe('Blog app', function() {
       cy.contains('Testing with Cypress Fonz Escolar')
     })
 
-    describe('When a blog exist', function() {
+    describe('and several blogs exist', function() {
       beforeEach(function() {
         cy.createBlog({
-          title: 'Testing with Cypress',
-          author: 'Fonz Escolar',
-          url: 'fonz-cypress.io'
+          title: 'Title One',
+          author: 'Author One',
+          url: 'urlone.com'
+        })
+        cy.createBlog({
+          title: 'Title Two',
+          author: 'Author Two',
+          url: 'urltwo.com'
+        })
+        cy.createBlog({
+          title: 'Title Three',
+          author: 'Author Three',
+          url: 'urlthree.com'
         })
       })
 
-      it('it can be liked', function() {
-        cy.contains('view').click()
-        cy.contains('likes 0')
-        cy.contains('like').click()
-        cy.contains('likes 1')
+      it('one of those can be liked', function() {
+        cy.contains('Title Two Author Two')
+          .contains('view').click()
+          .parent()
+          .next()
+          .contains('likes 0')
+          .contains('like').click()
+
+        cy.get('html').should('contain', 'likes 1')
       })
 
-      it.only('it can be deleted', function() {
-        cy.contains('view').click()
-        cy.contains('remove').click()
-        cy.get('html').should('not.contain', 'Testing with Cypress')
-      })
+      it('one of those can be deleted', function() {
+        cy.contains('Title Three Author Three')
+          .contains('view').click()
+          .parent()
+          .next()
+          .contains('remove').click()
 
+        cy.get('html').should('not.contain', 'Title Three Author Three')
+      })
     })
   })
 })

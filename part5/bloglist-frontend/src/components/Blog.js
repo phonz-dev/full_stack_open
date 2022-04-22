@@ -31,7 +31,7 @@ const Blog = props => {
 
   return (
     <div>
-      <div style={blogStyle}>
+      <div style={blogStyle} className='blogContainer'>
         <div className='blogTitle'>
           {blog.title} {blog.author}
           <button onClick={toggleVisibility}>
